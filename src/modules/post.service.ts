@@ -1,7 +1,8 @@
-import { title } from "node:process";
+
 import { Post, PostStatuss } from "../../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 import { PostWhereInput } from "../../generated/prisma/models";
+
 
 const createPost = async (data: Omit<Post, "id" | "createdAt" | "updatedAt" | "authorId">, userId:string) =>{
     const post = await prisma.post.create({
@@ -13,12 +14,28 @@ const createPost = async (data: Omit<Post, "id" | "createdAt" | "updatedAt" | "a
     return post
 }
 
-const getAllPost = async({search,tag,isFeatured,status,authorId}:{
+const getAllPost = async({
+    search,
+    tag,
+    isFeatured,
+    status,
+    authorId,
+    page,
+    limit,
+    skip,
+    sortBy,
+    sortOrder
+}:{
     search: string | undefined,
     tag: string[] | [],
     isFeatured: boolean | undefined,
     status:PostStatuss | undefined,
-    authorId:string |undefined
+    authorId:string |undefined,
+    page:number,
+    limit:number,
+    skip:number,
+    sortBy: string | undefined,
+    sortOrder: string | undefined
 })=>{
     const andCondstions:PostWhereInput[] = [];
 
@@ -68,10 +85,16 @@ const getAllPost = async({search,tag,isFeatured,status,authorId}:{
    }
 
  const allPost = await prisma.post.findMany({
+    take:limit,
+    skip,
     where:{
         AND:andCondstions
+    },
+    orderBy:sortBy && sortOrder ? {
+        [sortBy]:sortOrder
+    }:{createdAt:"desc"}
     }
- })
+ )
  return allPost
 }
 

@@ -38,10 +38,26 @@ try {
     const tag = req.query.tag ? (req.query.tag as string).split(",") : []
     const isFeatured = req.query.isFeatured? req.query.isFeatured === "true" : undefined 
     const status = req.query.status as PostStatuss
-    const authorId = req.query.authorId as string
-    
+    const authorId = req.query.authorId as string;
+    const page = Number(req.query.page ?? 1)
+    const limit = Number(req.query.limit ?? 10)
+    const skip = (page-1)*limit;
+    const sortBy = req.query.sortBy as string | undefined;
+    const sortOrder = req.query.sortOrder as string | undefined
 
-    const allPost = await postService.getAllPost({search:searchType,tag,isFeatured,status,authorId})
+
+    const allPost = await postService.getAllPost({
+        search:searchType,
+        tag,
+        isFeatured,
+        status,
+        authorId,
+        page,
+        limit,
+        skip,
+        sortBy,
+        sortOrder
+    })
     
 
    

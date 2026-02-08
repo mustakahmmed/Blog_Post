@@ -1,37 +1,53 @@
-import { prisma } from "../lib/prisma"
-import { userRole } from "../middlewere/auth"
 
-async function seedAdmin(){
+import { prisma } from "../lib/prisma";
+import { userRole } from "../middlewere/auth";
+
+async function seedAdmin() {
     try {
-        const adminData = {
-            name: "Admin2 Saheb",
-            email: "admin2@admin.com",
-            role: userRole.ADMIN,
-            password: "admin1234"
+        const adminData ={
+        name:"admin",
+        email:"admin@gmail.com",
+        role:userRole.ADMIN,
+        mobile:"0167889",
+        password: "admin1234",
+        emailVerified:true
+    }
+    
+    const checkUser = await prisma.user.findUnique({
+        where:{
+            email:adminData.email
         }
+    })
+    // if user alrady exist then throw error
+    if (checkUser) {
+        throw new Error("this acount alrady exist in db")
+    }
+    // now sign up admin
+    const signUpAdmin = await fetch('http://localhost:3000/api/auth/sign-up/email',{
+        method:'POST',
+        headers:{
+            "Content-Type": "application/json",
+            "origin":"http://localhost:3000"
+        },
+        body:JSON.stringify(adminData)
+    })
 
-        const existingUser = await prisma.user.findUnique({
+    if (signUpAdmin.ok) {
+        await prisma.user.update({
             where:{
                 email:adminData.email
-            }
-        });
-
-        if (existingUser) {
-            throw new Error("user alrady exist")
-        }
-
-        const signupAdmin = await fetch('http://localhost:3000/api/auth/sign-up/email',{
-            method:"POST",
-            headers:{
-                "Content-Type": "application/json"
             },
-            body:JSON.stringify(adminData)
+            data:{
+                emailVerified:true
+            }
         })
-        console.log(signupAdmin);
-        
+    }
+
+    console.log(signUpAdmin);
+    
     } catch (error) {
-        console.error(error)
+        console.error(error);
+        
     }
 }
-
 seedAdmin()
