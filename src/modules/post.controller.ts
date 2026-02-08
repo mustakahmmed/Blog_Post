@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { postService } from "./post.service";
 import { prisma } from "../lib/prisma";
 import { PostStatuss } from "../../generated/prisma/enums";
+import paginationSortingHelper from "../helpers/paginationSortingHelper";
 
 
 
@@ -39,11 +40,8 @@ try {
     const isFeatured = req.query.isFeatured? req.query.isFeatured === "true" : undefined 
     const status = req.query.status as PostStatuss
     const authorId = req.query.authorId as string;
-    const page = Number(req.query.page ?? 1)
-    const limit = Number(req.query.limit ?? 10)
-    const skip = (page-1)*limit;
-    const sortBy = req.query.sortBy as string | undefined;
-    const sortOrder = req.query.sortOrder as string | undefined
+
+    const {page,limit,skip,sortBy,sortOrder} = paginationSortingHelper(req.query)
 
 
     const allPost = await postService.getAllPost({
