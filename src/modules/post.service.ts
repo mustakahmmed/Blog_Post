@@ -94,8 +94,20 @@ const getAllPost = async({
         [sortBy]:sortOrder
     }
     })
-    
- return allPost
+    const total = await prisma.post.count({
+        where:{
+            AND:andCondstions
+            }
+    })
+ return {
+    data:allPost,
+    pagination:{
+        total,
+        page,
+        limit,
+        totalPage:Math.ceil(total/limit)
+    }
+ }
 }
 
 export const postService = {
