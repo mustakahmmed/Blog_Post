@@ -16,5 +16,5 @@ app.use(cors({
 }))
 
 
-app.use("/",postRouter)
+app.use("/post",postRouter)
 export default app
