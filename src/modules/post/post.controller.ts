@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { postService } from "./post.service";
-import { prisma } from "../lib/prisma";
-import { PostStatuss } from "../../generated/prisma/enums";
-import paginationSortingHelper from "../helpers/paginationSortingHelper";
+import { PostStatuss } from "../../../generated/prisma/enums";
+import paginationSortingHelper from "../../helpers/paginationSortingHelper";
 
 
 

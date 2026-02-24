@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { postController } from "./post.controller";
-import auth, { userRole } from "../middlewere/auth";
+import auth, { userRole } from "../../middlewere/auth";
 
 
 
