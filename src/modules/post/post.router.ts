@@ -12,11 +12,33 @@ router.get("/",
 )
 
 router.post("/",
-    auth(userRole.USER),
+    auth(userRole.USER,userRole.ADMIN),
     postController.createPosts
 )
+// place the more specific route before the dynamic :postId route
+router.get("/my-posts",
+    auth(userRole.USER,userRole.ADMIN),
+    postController.getMyPosts
+)
+
+router.get("/stats",
+    auth(userRole.ADMIN),
+    postController.getStats
+)
+
+
 router.get("/:postId",
     postController.getPostById
+)
+
+router.patch("/:postId",
+    auth(userRole.ADMIN,userRole.USER),
+    postController.updateMyPost
+)
+
+router.delete("/:postId",
+    auth(userRole.ADMIN,userRole.USER),
+    postController.deletePost
 )
 
 
