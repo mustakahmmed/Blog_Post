@@ -4,6 +4,7 @@ import { postRouter } from "./modules/post/post.router"
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import { commentRouter } from "./modules/comment/comment.router";
+import errorHandler from "./middlewere/globalErrorHandler";
 
 
 
@@ -19,4 +20,6 @@ app.use(cors({
 
 app.use("/post",postRouter)
 app.use("/comment",commentRouter)
+
+app.use(errorHandler)
 export default app

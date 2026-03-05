@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { postService } from "./post.service";
 import { PostStatuss } from "../../../generated/prisma/enums";
 import paginationSortingHelper from "../../helpers/paginationSortingHelper";
@@ -9,7 +9,7 @@ import { userRole } from "../../middlewere/auth";
 
 
 
-const createPosts = async (req:Request,res:Response)=>{
+const createPosts = async (req:Request,res:Response,next:NextFunction)=>{
     console.log(req.user);
 
     
@@ -28,10 +28,7 @@ const createPosts = async (req:Request,res:Response)=>{
             data:posts
         })
     } catch (error) {
-        res.status(400).json({
-            message:"Post creation failed",
-            data:error
-        })
+        next(error)
     }
 }
 
@@ -111,7 +108,7 @@ const getMyPosts = async(req:Request,res:Response) => {
     }
 }
 
-const updateMyPost = async(req:Request,res:Response) => {
+const updateMyPost = async(req:Request,res:Response,next:NextFunction) => {
     try {
         const user = req.user
         const {postId} = req.params
@@ -124,10 +121,7 @@ const updateMyPost = async(req:Request,res:Response) => {
         const result = await postService.updateMyPost(postId as string,req.body,user.id,isAdmin)
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({
-            message:"updating post failed",
-            data:error
-        })
+        next(error)
     }
 }
 
